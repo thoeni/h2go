@@ -1,6 +1,9 @@
 package h2go
 
-import "github.com/stianeikeland/go-rpio"
+import (
+	"fmt"
+	"github.com/stianeikeland/go-rpio"
+)
 
 type pi struct {
 	WaterPump rpio.Pin
@@ -23,9 +26,9 @@ func PiInit() (*pi, error) {
 
 func (p *pi) IsOn() bool {
 	if p.WaterPump.Read() == rpio.Low {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func (p *pi) Stop() {
@@ -41,5 +44,6 @@ func (p *pi) Toggle() {
 }
 
 func (*pi) Close() error {
+	fmt.Println("Closing memory mapping with RaspberryPI")
 	return rpio.Close()
 }

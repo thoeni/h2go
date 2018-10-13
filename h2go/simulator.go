@@ -1,5 +1,10 @@
 package h2go
 
+import (
+	"fmt"
+	"time"
+)
+
 type simulator struct{
 	waterPumpOff bool
 }
@@ -21,10 +26,12 @@ func (s *simulator) Start() {
 }
 
 func (s *simulator) Toggle() {
+	time.Sleep(5 * time.Second)
 	s.waterPumpOff = !s.waterPumpOff
 }
 
 func (simulator) Close() error {
+	fmt.Println("Closing water simulator")
 	return nil
 }
 
