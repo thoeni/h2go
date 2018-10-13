@@ -6,7 +6,8 @@ import (
 )
 
 type pi struct {
-	WaterPump rpio.Pin
+	WaterPump      rpio.Pin
+	MoistureSensor rpio.Pin
 }
 
 func PiInit() (*pi, error) {
@@ -17,8 +18,15 @@ func PiInit() (*pi, error) {
 	waterPin := rpio.Pin(18)
 	waterPin.Output()
 
+	moisturePin := rpio.Pin(12)
+	moisturePin.Input()
+
+	moisturePin.PullUp()
+	moisturePin.Detect(rpio.AnyEdge)
+
 	pi := pi{
 		WaterPump: waterPin,
+		MoistureSensor: moisturePin,
 	}
 
 	return &pi, nil
@@ -46,4 +54,12 @@ func (p *pi) Toggle() {
 func (*pi) Close() error {
 	fmt.Println("Closing memory mapping with RaspberryPI")
 	return rpio.Close()
+}
+
+func (p *pi) MoistureSensorDetect() bool {
+	return p.MoistureSensor.EdgeDetected()
+}
+
+func (p *pi) StopMoistureSensorDetection() {
+	p.MoistureSensor.Detect(rpio.NoEdge)
 }

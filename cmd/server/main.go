@@ -18,7 +18,7 @@ func main() {
 	simulate := flag.Bool("simulate", false, "pass the -simulate flag to use an in memory implementation")
 	flag.Parse()
 
-	w = h2go.NewWaterer(*simulate)
+	w = h2go.NewSystem(*simulate)
 	defer w.Close()
 
 	// On SIGTERM stop pump and close

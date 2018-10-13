@@ -5,6 +5,11 @@ import (
 	"os"
 )
 
+type System interface {
+	Waterer
+	MoistureDetector
+}
+
 type Waterer interface {
 	IsOn() bool
 	Stop()
@@ -13,7 +18,12 @@ type Waterer interface {
 	Close() error
 }
 
-func NewWaterer(simulate bool) Waterer {
+type MoistureDetector interface {
+	MoistureSensorDetect() bool
+	StopMoistureSensorDetection()
+}
+
+func NewSystem(simulate bool) System {
 	switch simulate {
 	case true:
 		return InitSimulator()

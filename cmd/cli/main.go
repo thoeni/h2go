@@ -7,36 +7,47 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func main() {
-	var w h2go.Waterer
+	var s h2go.System
 	simulate := flag.Bool("simulate", false, "pass the -simulate flag to use an in memory implementation")
 	set := flag.String("set", "", "pass the -set flag to use set a value [on/off]")
+	moisture := flag.Bool("moisture", false, "pass the -moisture flag to use check moisture level")
 	flag.Parse()
 
-	w = h2go.NewWaterer(*simulate)
-	defer w.Close()
+	s = h2go.NewSystem(*simulate)
+	defer s.Close()
 
 	// On SIGTERM stop pump and close
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		w.Stop()
-		w.Close()
+		s.Stop()
+		s.Close()
 		os.Exit(1)
 	}()
 
 	switch *set {
 	case "on":
-		w.Start()
+		s.Start()
 	case "off":
-		w.Stop()
+		s.Stop()
 	default:
-		fmt.Printf("Unknown set status: %s\n", *set)
 	}
-	fmt.Printf("Current waterer status: %s\n", boolToString(w.IsOn()))
+	fmt.Printf("Current waterer status: %s\n", boolToString(s.IsOn()))
+
+	if *moisture {
+		for i := 0; i < 2; {
+			if s.MoistureSensorDetect() { // check if event occured
+				fmt.Println("value changed")
+				i++
+			}
+			time.Sleep(time.Second)
+		}
+	}
 }
 
 func boolToString(b bool) string {

@@ -9,6 +9,14 @@ type simulator struct{
 	waterPumpOff bool
 }
 
+func (s *simulator) MoistureSensorDetect() bool {
+	panic("implement me")
+}
+
+func (s *simulator) StopMoistureSensorDetection() {
+	panic("implement me")
+}
+
 func InitSimulator() *simulator {
 	return &simulator{}
 }
