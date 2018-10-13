@@ -53,10 +53,7 @@ func watererStatus(wt h2go.Waterer) http.HandlerFunc {
 }
 
 func getWatererStatus(w http.ResponseWriter, r *http.Request, wt h2go.Waterer) {
-	resp := status{"off"}
-	if wt.IsOn() {
-		resp.Status = "on"
-	}
+	resp := status{boolToString(wt.IsOn())}
 	b, _ := json.Marshal(resp)
 	w.Write(b)
 }
@@ -80,4 +77,12 @@ func postWatererStatus(w http.ResponseWriter, r *http.Request, wt h2go.Waterer) 
 	default:
 		w.WriteHeader(http.StatusBadRequest)
 	}
+}
+
+func boolToString(b bool) string {
+	s := "off"
+	if b {
+		s = "on"
+	}
+	return s
 }

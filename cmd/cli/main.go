@@ -3,11 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/thoeni/h2go/h2go"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/thoeni/h2go/h2go"
 )
 
 func main() {
@@ -30,16 +29,20 @@ func main() {
 	}()
 
 	switch *set {
-	case "":
-		// Return current value:
-		fmt.Printf("Waterer on?: %v\n", w.IsOn())
 	case "on":
 		w.Start()
-		fmt.Printf("Waterer on?: %v\n", w.IsOn())
 	case "off":
 		w.Stop()
-		fmt.Printf("Waterer on?: %v\n", w.IsOn())
 	default:
 		fmt.Printf("Unknown set status: %s\n", *set)
 	}
+	fmt.Printf("Current waterer status: %s\n", boolToString(w.IsOn()))
+}
+
+func boolToString(b bool) string {
+	s := "off"
+	if b {
+		s = "on"
+	}
+	return s
 }
