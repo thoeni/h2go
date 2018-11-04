@@ -16,6 +16,8 @@ func PiInit() (*pi, error) {
 
 	waterPin := rpio.Pin(18)
 	waterPin.Output()
+	// On a normally closed, high will open
+	waterPin.High()
 
 	pi := pi{
 		WaterPump: waterPin,
